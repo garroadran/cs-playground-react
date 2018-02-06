@@ -2,7 +2,8 @@ import _ from 'lodash'
 
 import {
   RMOVE_DUPES,
-  ALL_TESTS_SUPPRESSED
+  ALL_TESTS_SUPPRESSED,
+  IS_SUITE_SUPPRESSED,
 } from '../utils/localStorageKeys'
 
 // STORE INITIALIZATION UTILS:
@@ -77,17 +78,24 @@ function removeDuplicates(codeStore) {
 }
 
 function add_SUPPRESS_TESTS_onlyOnce(codeStore, current, welcome) {
+  const isDisabled = {}
   if (!localStorage.getItem(ALL_TESTS_SUPPRESSED)) {
     for (let challenge of codeStore) {
       challenge.userCode = challenge.userCode.concat(
         '\r\r// SUPPRESS TESTS, delete this line to activate\r'
       )
+      // indicate specific challenge disbaled so toggle suppress
+      // tests works. see src/utils/toggleSuppressTests.js
+      isDisabled[challenge.id] = true
     }
+    // add suppression to current challenge so user notices change
     if (!current.isSolution && !welcome) {
       current.code = current.code.concat(
         '\r\r// SUPPRESS TESTS, delete this line to activate\r'
       )
     }
+    localStorage.setItem(IS_SUITE_SUPPRESSED, JSON.stringify(isDisabled))
+    // indicate all tests have been suppressed by default
     localStorage.setItem(ALL_TESTS_SUPPRESSED, true)
   }
   return { codeStore, current }

@@ -22,7 +22,8 @@
     "build": "react-scripts build",
     "test": "react-scripts test --env=jsdom",
     "eject": "react-scripts eject",
-    "deploy": "yarn run build && cd build && surge --domain cs-playground-react.surge.sh"
+    "deploy": "yarn run build && cd build && surge --domain cs-playground-react.surge.sh",
+    "test-deploy": "yarn run build && cd build && surge --domain questionable-number.surge.sh"
   },
   "devDependencies": {
     "chalk": "^2.3.0",

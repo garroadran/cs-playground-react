@@ -1,9 +1,12 @@
-import { ARE_TESTS_SUPPRESSED } from './localStorageKeys'
+import { IS_SUITE_SUPPRESSED } from './localStorageKeys'
+import { store } from '../index';
 
 export default function(cm) {
-  let are = localStorage.getItem(ARE_TESTS_SUPPRESSED)
-  are = are ? JSON.parse(are) : are
-  if (are && are.testsDisabled) {
+  let isDisabled = JSON.parse(
+    localStorage.getItem(IS_SUITE_SUPPRESSED)
+  )
+  let id = store.getState().editor.current.id
+  if (isDisabled[id]) {
     cm.eachLine(line => {
       if (line && line.text.includes('// SUPPRESS TESTS')) {
         cm.setCursor(line.lineNo())
@@ -11,12 +14,7 @@ export default function(cm) {
         cm.execCommand('goLineEnd')
       }
     })
-    localStorage.setItem(
-      ARE_TESTS_SUPPRESSED,
-      JSON.stringify({
-        testsDisabled: false
-      })
-    )
+    isDisabled[id] = false
   } else {
     const { line } = cm.getCursor()
     if (!/^\s*$/.test(cm.getLine(line))) {
@@ -24,11 +22,10 @@ export default function(cm) {
       cm.execCommand('newlineAndIndent')
     }
     cm.replaceSelection('// SUPPRESS TESTS')
-    localStorage.setItem(
-      ARE_TESTS_SUPPRESSED,
-      JSON.stringify({
-        testsDisabled: true
-      })
-    )
+    isDisabled[id] = true
   }
+  localStorage.setItem(
+    IS_SUITE_SUPPRESSED,
+    JSON.stringify(isDisabled)
+  )
 }
