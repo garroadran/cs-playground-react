@@ -25,6 +25,10 @@ function reverseAString(myString) {
   * @returns {string}
   */
 
+  // While not the most concise approach, this solution
+  // has the benefit of working quickly on very large
+  // strings and a small memory overhead.
+
 function reverseAString(str) {
   const arr = str.split('');
 
