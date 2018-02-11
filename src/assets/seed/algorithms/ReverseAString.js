@@ -15,6 +15,8 @@ export default {
   // if you can avoid using the built-in .reverse function!
 
 function reverseAString(myString) {
+  // Do stuff here
+
   return 'gnirtSym';
 }
 `,
